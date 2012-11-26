@@ -28,7 +28,8 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "commander": "latest"
+    "commander": "latest",
+    "dot": "latest"
   },
   "devDependencies": {
     "grunt": "~0.3.15",
