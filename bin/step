@@ -11,6 +11,8 @@ var program  = require("commander")
 program
   .version(require("../package").version)
   .usage("[options] <file>")
+  .option("-w, --watch", "run step every time a watched file changes.")
+  .option("-j, --json", "skip file writing and dump json to terminal.")
   .parse(process.argv);
 
 if (program.args.length === 0) {
@@ -20,5 +22,8 @@ if (program.args.length === 0) {
   console.log("Can only handle one file at a time.");
 }
 
-step.load(program.args[0]);
+step.load(program.args[0], {
+  watch: program.watch,
+  json: program.json
+});
 
