@@ -1,0 +1,37 @@
+{
+  "name": "step",
+  "description": "Decode MIDI files into easily comprehensible javascript objects.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/nick/step",
+  "author": {
+    "name": "Nick Thompson",
+    "email": "ncthom91@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nick/step.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nick/step/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/nick/step/blob/master/LICENSE"
+    }
+  ],
+  "main": "lib/step",
+  "engines": {
+    "node": ">= 0.6.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "dependencies": {
+    "commander": "latest"
+  },
+  "devDependencies": {
+    "grunt": "~0.3.15"
+  },
+  "keywords": []
+}

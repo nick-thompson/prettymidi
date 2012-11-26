@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var program  = require("commander")
+  , step     = require("../lib/step");
+
+
+program
+  .version(require("../package").version)
+  .usage("[options] <file>")
+  .parse(process.argv);
+
+if (program.args.length === 0) {
+  console.log(program.helpInformation());
+  process.exit();
+} else if (program.args.length > 1) {
+  console.log("Can only handle one file at a time.");
+}
+
+step.load(program.args[0]);
+
