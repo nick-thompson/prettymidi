@@ -8,7 +8,7 @@ var exec    = require("child_process").exec
 describe("step default", function () {
 
   afterEach(function (done) {
-    exec("rm -rf step", done);
+    exec("rm -rf stepfiles", done);
   });
 
   it("Decodes a midi file", function (done) {

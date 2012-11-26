@@ -36,6 +36,7 @@ module.exports = function(grunt) {
         eqnull: true,
         node: true,
         laxcomma: true,
+        laxbreak: true,
         strict: false
       },
       globals: {
