@@ -29,7 +29,8 @@
   },
   "dependencies": {
     "commander": "latest",
-    "dot": "latest"
+    "dot": "latest",
+    "colors": "latest"
   },
   "devDependencies": {
     "grunt": "~0.3.15",
