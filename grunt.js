@@ -3,16 +3,25 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: '<json:package.json>',
-    test: {
-      files: ['test/**/*.js']
+
+    simplemocha: {
+      all: {
+        src: 'test/**/*.js',
+        options: {
+          reporter: 'spec'
+        }
+      }
     },
+
     lint: {
-      files: ['grunt.js', 'lib/**/*.js', 'test/**/*.js']
+      files: ['lib/**/*.js']
     },
+
     watch: {
       files: '<config:lint.files>',
       tasks: 'default'
     },
+
     jshint: {
       options: {
         curly: true,
@@ -25,7 +34,9 @@ module.exports = function(grunt) {
         undef: true,
         boss: true,
         eqnull: true,
-        node: true
+        node: true,
+        laxcomma: true,
+        strict: false
       },
       globals: {
         exports: true
@@ -33,7 +44,7 @@ module.exports = function(grunt) {
     }
   });
 
-  // Default task.
-  grunt.registerTask('default', 'lint test');
+  grunt.loadNpmTasks('grunt-simple-mocha');
+  grunt.registerTask('default', 'lint simplemocha');
 
 };

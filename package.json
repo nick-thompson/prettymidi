@@ -31,7 +31,10 @@
     "commander": "latest"
   },
   "devDependencies": {
-    "grunt": "~0.3.15"
+    "grunt": "~0.3.15",
+    "grunt-simple-mocha": "latest",
+    "mocha": "latest",
+    "chai": "latest"
   },
   "keywords": []
 }
