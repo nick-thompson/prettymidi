@@ -6,28 +6,28 @@ var exec    = require("child_process").exec
   , should  = chai.should()
   , exists  = fs.existsSync;
 
-describe("step default", function () {
+describe("prettymidi default", function () {
 
   afterEach(function (done) {
-    exec("rm -rf stepfiles", done);
+    exec("rm -rf prettymidifiles", done);
   });
 
   it("Decodes a midi file", function (done) {
-    exec("bin/step test/fixtures/example-ctwykm.mid", function (err, stdout) {
+    exec("bin/prettymidi test/fixtures/example-ctwykm.mid", function (err, stdout) {
       if (err) { done(err); }
       stdout.should.include("written");
-      expect(exists("stepfiles/example-ctwykm.js")).to.equal(true);
+      expect(exists("prettymidifiles/example-ctwykm.js")).to.equal(true);
       done();
     });
   });
 
   it("Can print plain json", function (done) {
-    exec("bin/step -j test/fixtures/example-ctwykm.mid", function (err, stdout) {
+    exec("bin/prettymidi -j test/fixtures/example-ctwykm.mid", function (err, stdout) {
       if (err) { done(err); }
       stdout.should.include("written");
-      expect(exists("stepfiles/example-ctwykm.json")).to.equal(true);
+      expect(exists("prettymidifiles/example-ctwykm.json")).to.equal(true);
 
-      var data = JSON.parse(fs.readFileSync("stepfiles/example-ctwykm.json"));
+      var data = JSON.parse(fs.readFileSync("prettymidifiles/example-ctwykm.json"));
       expect(data).to.be.a("object");
       data.should.have.property("nTracks");
       done();

@@ -5,7 +5,7 @@
  */
 
 var program  = require("commander")
-  , step     = require("../lib/step");
+  , pm       = require("../lib/prettymidi");
 
 
 program
@@ -22,7 +22,7 @@ if (program.args.length === 0) {
   console.log("Can only handle one file at a time.");
 }
 
-step.load(program.args[0], {
+pm.load(program.args[0], {
   watch: program.watch,
   json: program.json
 });

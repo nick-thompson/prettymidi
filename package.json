@@ -1,26 +1,26 @@
 {
-  "name": "step",
+  "name": "PrettyMIDI",
   "description": "Decode MIDI files into easily comprehensible javascript objects.",
   "version": "0.1.0",
-  "homepage": "https://github.com/nick/step",
+  "homepage": "https://github.com/nick/prettymidi",
   "author": {
     "name": "Nick Thompson",
     "email": "ncthom91@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/nick/step.git"
+    "url": "git://github.com/nick/prettymidi.git"
   },
   "bugs": {
-    "url": "https://github.com/nick/step/issues"
+    "url": "https://github.com/nick/prettymidi/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/nick/step/blob/master/LICENSE"
+      "url": "https://github.com/nick/prettymidi/blob/master/LICENSE"
     }
   ],
-  "main": "lib/step",
+  "main": "lib/prettymidi",
   "engines": {
     "node": ">= 0.6.0"
   },
