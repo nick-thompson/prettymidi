@@ -12,7 +12,6 @@ program
   .version(require("../package").version)
   .usage("[options] <file>")
   .option("-w, --watch", "run step every time a watched file changes.")
-  .option("-j, --json", "skip file writing and dump json to terminal.")
   .parse(process.argv);
 
 if (program.args.length === 0) {
@@ -23,7 +22,6 @@ if (program.args.length === 0) {
 }
 
 pm.load(program.args[0], {
-  watch: program.watch,
-  json: program.json
+  watch: program.watch
 });
 
