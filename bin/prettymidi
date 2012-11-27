@@ -12,16 +12,16 @@ program
   .version(require("../package").version)
   .usage("[options] <file>")
   .option("-w, --watch", "run step every time a watched file changes.")
+  .option("-o, --output <dir>", "output files to a specific directory.")
   .parse(process.argv);
 
 if (program.args.length === 0) {
-  console.log(program.helpInformation());
-  process.exit();
-} else if (program.args.length > 1) {
-  console.log("Can only handle one file at a time.");
-}
+  program.help();
+} 
 
-pm.load(program.args[0], {
-  watch: program.watch
-});
+if (program.watch) {
+  console.log("Watching not implemented yet");
+} else {
+  pm.once(program.args, program.output);
+}
 
