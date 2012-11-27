@@ -20,6 +20,9 @@
       "url": "https://github.com/nick/prettymidi/blob/master/LICENSE"
     }
   ],
+  "bin": {
+    "prettymidi": "./bin/prettymidi"
+  },
   "main": "lib/prettymidi",
   "engines": {
     "node": ">= 0.6.0"
