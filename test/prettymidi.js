@@ -29,7 +29,7 @@ describe("prettymidi default", function () {
 
       var data = JSON.parse(fs.readFileSync("prettymidifiles/example-ctwykm.json"));
       expect(data).to.be.a("object");
-      data.should.have.property("nTracks");
+      data.should.have.property("ticksPerBeat");
       done();
     });
   });
