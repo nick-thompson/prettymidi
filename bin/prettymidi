@@ -19,6 +19,11 @@ if (program.args.length === 0) {
   program.help();
 } 
 
+console.log();
+process.on("exit", function () {
+  console.log();
+});
+
 if (program.watch) {
   console.log("Watching not implemented yet");
 } else {
