@@ -34,4 +34,25 @@ describe("step default", function () {
     });
   });
 
+  describe("Decoding a single file", function () {
+
+    it("outputs a json file in the same directory", function (done) {
+      done();
+    });
+
+    it("accepts an output destination flag", function (done) {
+      done();
+    });
+
+    it("accepts an amd wrapper flag", function (done) {
+      done();
+    });
+  });
+
+  describe("Decoding several files", function () {
+  });
+
+  describe("Decoding a directory", function () {
+  });
+
 });
