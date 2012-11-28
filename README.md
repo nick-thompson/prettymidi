@@ -9,6 +9,11 @@ standard (MIDI). So what then? Let PrettyMidi parse your MIDI files into
 intuitive JSON objects, and you'll be rolling in no time ;)
 
 ## Usage
+Right now, PrettyMidi is solely a command line tool. The usage section below
+defines how you might use it in the browser, which is basically the focus of
+PrettyMidi, but the browser api is not available yet. Right now you can just
+parse local midi files into json files from your command line.
+
 Soon you'll be able to install with npm, but I haven't registered it yet.
 For now you'll have to clone this repo and run `npm link`. I'll register it
 as soon as I touch it up a little :)
