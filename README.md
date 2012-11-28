@@ -19,6 +19,12 @@ For now you'll have to clone this repo and run `npm link`. I'll register it
 as soon as I touch it up a little :)
 
 ### Command Line
+```
+bin/prettymidi path/to/midiFile.mid
+```
+
+If you want a quick peak of the functionality, there are two midi files available
+in the test/fixtures folder.
 
 ### Node.js
 
