@@ -9,7 +9,9 @@ standard (MIDI). So what then? Let PrettyMidi parse your MIDI files into
 intuitive JSON objects, and you'll be rolling in no time ;)
 
 ## Usage
-Install the module with: `npm install prettymidi`
+Soon you'll be able to install with npm, but I haven't registered it yet.
+For now you'll have to clone this repo and run `npm link`. I'll register it
+as soon as I touch it up a little :)
 
 ### Command Line
 
