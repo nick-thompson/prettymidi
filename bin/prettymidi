@@ -5,8 +5,17 @@
  */
 
 var program  = require("commander")
-  , pm       = require("../lib/prettymidi");
+  , prettyMidi       = require("../lib/prettymidi")
+  , utils   = require("../lib/utils")
+  , fs      = require("fs")
+  , path    = require("path")
+  , doT     = require("dot")
+  , glob    = require("glob")
+  , exists  = fs.existsSync;
 
+/**
+ * Program usage
+ */
 
 program
   .version(require("../package").version)
@@ -15,18 +24,79 @@ program
   .option("-o, --output <dir>", "output files to a specific directory.")
   .parse(process.argv);
 
-if (program.args.length === 0) {
-  program.help();
-} 
+/**
+ * Entry point for the command line bin file. Delegates files to
+ * the load method to be parsed one time.
+ *
+ * @param {Array} files
+ * @param {String} dest : output destination. Defaults to `pwd`
+ */
+
+var once = function (files, dest) {
+  dest = path.resolve(dest || ".");
+  if (!exists(dest)) {
+    fs.mkdirSync(dest);
+  }
+
+  files.forEach(function (file) {
+    file = path.resolve(file);
+    fs.stat(file, function (err, stats) {
+      if (err) { throw err; }
+      if (stats.isFile()) {
+        parse(file, dest);
+      } else if (stats.isDirectory()) {
+        glob(file + "**/*.mid", function (err, files) {
+          once(files, dest);
+        });
+      }
+    });
+  });
+};
+
+/**
+ * Read a midi file and write it out to a json file of the
+ * same name in `dest`
+ *
+ * @param {String} file
+ * @param {String} dest
+ */
+
+var parse = function (file, dest) {
+  var pwd = path.resolve(".");
+  utils.log("reading " + path.relative(pwd, file));
+  fs.readFile(file, function (err, data) {
+    if (err) { throw err; }
+
+    utils.log("parsing " + path.relative(pwd, file));
+    var fname = path.basename(file, ".mid") + ".json"
+      , out = path.join(dest, fname)
+      , result;
+
+    try {
+      result = JSON.stringify(prettyMidi.decode(data), null, 2)
+    } catch (err) {
+      utils.error(err.message);
+    }
+
+    fs.writeFile(out, result, function (err) {
+      if (err) { throw err; }
+      utils.log("writing " + path.relative(pwd, out));
+    });
+  });
+};
+
+/**
+ * Execute
+ */
+
+if (program.args.length === 0) { program.help(); } 
 
 console.log();
-process.on("exit", function () {
-  console.log();
-});
+process.on("exit", function () { console.log(); });
 
 if (program.watch) {
   console.log("Watching not implemented yet");
 } else {
-  pm.once(program.args, program.output);
+  once(program.args, program.output);
 }
 

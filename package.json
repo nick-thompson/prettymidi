@@ -23,7 +23,7 @@
   "bin": {
     "prettymidi": "./bin/prettymidi"
   },
-  "main": "lib/prettymidi",
+  "main": "lib/prettymidi.js",
   "engines": {
     "node": ">= 0.6.0"
   },
