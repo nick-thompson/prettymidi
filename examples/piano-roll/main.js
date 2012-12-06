@@ -81,8 +81,7 @@ var s = new Sampler(context, map, function () {
       , map = {}
 
       // Style attributes
-      , margin = 20
-      , width = window.innerWidth - (margin * 2)
+      , width = 800
       , height = 100;
 
     var chart = d3.select("body").append("svg")
