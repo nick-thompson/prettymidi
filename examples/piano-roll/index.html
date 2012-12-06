@@ -8,12 +8,20 @@
     }
 
     body {
+      padding-top: 60px;
       text-align: center;
     }
 
+    .words {
+      width: 800px;
+      text-align: left;
+      margin: 0px auto;
+      margin-bottom: 50px;
+      font: 10pt tahoma, helvetica, sans-serif;
+    }
+
     .chart {
-      position: relative;
-      top: 30%;
+      margin-top: 20px;
       -webkit-box-shadow: 0px 0px 4px 4px rgb(228, 228, 228);
               box-shadow: 0px 0px 4px 4px rgb(228, 228, 228);
 
@@ -26,6 +34,13 @@
   </style>
 </head>
 <body>
+  <div class="words">
+    Below is a graphical representation of a MIDI file. If you're in a browser
+    that supports the Web Audio API, you should be hearing the MIDI file 
+    being played through a set of drum samples. This example is meant to
+    demonstrate the ease of working with a MIDI file that has been decoded with
+    PrettyMidi, both for sequencing and for visualization.
+  </div>
   <script src="http://d3js.org/d3.v2.min.js" type="text/javascript" charset="utf-8"></script>
   <script src="sampler.js" type="text/javascript" charset="utf-8"></script>
   <script src="main.js" type="text/javascript" charset="utf-8"></script>
