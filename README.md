@@ -1,37 +1,22 @@
 # PrettyMidi
 
-Decode MIDI files into easily comprehensible javascript objects.
+A simple MIDI file decoding library for audio applications.
 
-## Motivation
-If you're doing any sort of sequencing with the Web Audio API, you need some way
-to represent timed events! Chances are you won't try to redefine the industry
-standard (MIDI). So what then? Let PrettyMidi parse your MIDI files into 
-intuitive JSON objects, and you'll be rolling in no time ;)
-
-## Usage
-Right now, PrettyMidi is solely a command line tool. The usage section below
-defines how you might use it in the browser, which is basically the focus of
-PrettyMidi, but the browser api is not available yet. Right now you can just
-parse local midi files into json files from your command line.
-
-Soon you'll be able to install with npm, but I haven't registered it yet.
-For now you'll have to clone this repo and run `npm link`. I'll register it
-as soon as I touch it up a little :)
-
-### Command Line
-```
-bin/prettymidi path/to/midiFile.mid
-```
-
-If you want a quick peak of the functionality, there are two midi files available
-in the test/fixtures folder.
+## Download
 
 ### Node.js
 
+Soon you'll be able to install with `npm install prettymidi`. Not yet though ;).
+
 ### Browser
 
+**Development:** [prettymidi.js](https://raw.github.com/nick-thompson/prettymidi/master/prettymidi.js)
+**Production:** [prettymidi.min.js](https://raw.github.com/nick-thompson/prettymidi/master/prettymidi.min.js)
+
+## Getting Started
+
 ```javascript
-var data  = prettyMidi.decode(myMidiFileBuffer)
+var data  = pm.decode(myMidiFileBuffer)
   , time  = context.currentTime
   , bpm   = 140 // beats per minute
   , tpb   = 8; // ticks per beat
@@ -52,5 +37,25 @@ data.tracks[0].events.forEach(function (e) {
 ```
 
 ## License
-Copyright (c) 2012 Nick Thompson  
-MIT License
+Copyright (c) 2012 Nick Thompson
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
