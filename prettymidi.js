@@ -1,9 +1,11 @@
-/*
+/*!
  * PrettyMidi
  * https://github.com/nick/prettymidi
  *
  * Copyright (c) 2012 Nick Thompson
  * MIT License
+ *
+ * @preserve
  */
 
 (function (context, definition) {
