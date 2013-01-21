@@ -1,46 +1,20 @@
 {
-  "name": "PrettyMIDI",
-  "description": "Decode MIDI files into easily comprehensible javascript objects.",
-  "version": "0.1.0",
-  "homepage": "https://github.com/nick/prettymidi",
-  "author": {
-    "name": "Nick Thompson",
-    "email": "ncthom91@gmail.com"
+  "name": "prettymidi",
+  "version": "0.0.0",
+  "description": "A MIDI file decoding library for Node.js and browser audio applications.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --reporter spec"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/nick/prettymidi.git"
+    "url": "git://github.com/nick-thompson/prettymidi.git"
   },
-  "bugs": {
-    "url": "https://github.com/nick/prettymidi/issues"
-  },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/nick/prettymidi/blob/master/LICENSE"
-    }
-  ],
-  "bin": {
-    "prettymidi": "./bin/prettymidi"
-  },
-  "main": "lib/prettymidi.js",
-  "engines": {
-    "node": ">= 0.6.0"
-  },
-  "scripts": {
-    "test": "grunt test"
-  },
-  "dependencies": {
-    "commander": "latest",
-    "dot": "latest",
-    "colors": "latest",
-    "glob": "latest"
-  },
+  "author": "Nick Thompson <ncthom91@gmail.com>",
+  "license": "MIT",
   "devDependencies": {
-    "grunt": "~0.3.15",
-    "grunt-simple-mocha": "latest",
+    "uglify-js": "latest",
     "mocha": "latest",
     "chai": "latest"
-  },
-  "keywords": []
+  }
 }
