@@ -1,16 +1,16 @@
-# PrettyMidi
+# PrettyMIDI
 
-A simple MIDI file decoding library for audio applications.
+PrettyMIDI is a small and simple library designed to easily facilitate
+working with MIDI in audio applications, in the most non-prescriptive way
+possible. Decoding and encoding MIDI files, and simplifying MIDI message event 
+handlers for the Web MIDI API are all on the drawing board as of now. Suggestions welcome :)
 
 ## Download
-
-### Node.js
-
-Soon you'll be able to install with `npm install prettymidi`. Not yet though ;).
 
 ### Browser
 
 **Development:** [prettymidi.js](https://raw.github.com/nick-thompson/prettymidi/master/prettymidi.js)
+
 **Production:** [prettymidi.min.js](https://raw.github.com/nick-thompson/prettymidi/master/prettymidi.min.js)
 
 ## Getting Started
@@ -35,6 +35,12 @@ data.tracks[0].events.forEach(function (e) {
   }
 });
 ```
+
+## Attribution
+
+A lot of the insight and motivation came through seeing Chris Wilson's
+[Standard-MIDI-File-Reader](https://github.com/cwilso/Standard-MIDI-File-reader)
+project. Further inspiration came from Michael Deal's awesome [MIDI.js](https://github.com/mudcube/MIDI.js).
 
 ## License
 Copyright (c) 2012 Nick Thompson
