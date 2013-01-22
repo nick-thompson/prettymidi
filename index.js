@@ -1,1 +1,1 @@
-module.exports = require("./prettymidi");
+module.exports = require("./rewrite");
