@@ -1,6 +1,7 @@
+
 /*!
- * PrettyMidi
- * https://github.com/nick/prettymidi
+ * PrettyMIDI
+ * https://github.com/nick-thompson/prettymidi
  *
  * Copyright (c) 2012 Nick Thompson
  * MIT License
@@ -8,20 +9,7 @@
  * @preserve
  */
 
-(function (context, definition) {
-  if (typeof module !== "undefined" && module.exports) {
-    module.exports = definition();
-  } else if (typeof define === "function" && typeof define.amd === "object") {
-    define(definition);
-  } else {
-    context["prettyMidi"] = definition();
-  }
-})(this, function () {
-
-  /**
-   * A mapping of MIDI Channel event type values
-   * to names and parameter names
-   */
+(function () {
 
   var map =  {
       0x8: {
@@ -55,24 +43,33 @@
   };
 
   /**
-   * Decode a MIDI file buffer
+   * Decoder constructor.
    *
-   * @param {Buffer} buffer
+   * @api private
    */
 
-  var decode = function (buffer) {
-    var data = new DataView(buffer)
-      , index = 0
-      , invalidHeader = false
-          || (data.getUint8(0) !== 0x4d) 
-          || (data.getUint8(1) !== 0x54) 
-          || (data.getUint8(2) !== 0x68) 
-          || (data.getUint8(3) !== 0x64)
-          || (data.getUint32(4) !== 6)
+  function Decoder () {}
 
-      , format = data.getUint16(8)
-      , nTracks = data.getUint16(10)
-      , ticksPerBeat = data.getUint16(12);
+  /**
+   * Decode a MIDI file buffer.
+   *
+   * @param {ArrayBuffer} buffer
+   * @api private
+   */
+
+  Decoder.prototype.decode = function (buffer) {
+    this.buffer = new DataView(buffer);
+
+    var invalidHeader = false
+          || (this.buffer.getUint8(0)  !== 0x4d) 
+          || (this.buffer.getUint8(1)  !== 0x54) 
+          || (this.buffer.getUint8(2)  !== 0x68) 
+          || (this.buffer.getUint8(3)  !== 0x64)
+          || (this.buffer.getUint32(4) !== 0x06)
+
+      , format = this.buffer.getUint16(8)
+      , nTracks = this.buffer.getUint16(10)
+      , ticksPerBeat = this.buffer.getUint16(12)
 
     if (invalidHeader) {
       throw new Error("malformed file header");
@@ -82,194 +79,179 @@
       throw new Error("Only MIDI file format type 1 is supported.");
     }
 
-    return {
+    this.data = {
         format: format
-      // , nTracks: nTracks // certain tracks contain only Meta or Sysex events
+      , nTracks: nTracks
       , ticksPerBeat: ticksPerBeat
-      , tracks: (function () {
-          var tracks = []
-            , index = 14;
-          for (var i = 0; i < nTracks; i++) {
-            index = decodeTrack(data, tracks, index);
-            if (index === -1) {
-              throw new Error("error reading track #" + i);
-            }
-          }
-          return tracks;
-        })()
+      , tracks: []
     };
 
+    this.pointer = 14;
+
+    while (--nTracks) {
+      this.decodeTrack();
+    }
+
+    return this.data;
+        
   };
 
   /**
-   * Helper method for decoding a single track.
+   * Decode the next buffer segment as a new track.
    *
-   * @param {DataView} data : midi data
-   * @param {Array} tracks
-   * @param {int} offset : offset pointer into the midi data
+   * @api private
    */
 
-  var decodeTrack = function (data, tracks, offset) {
+  Decoder.prototype.decodeTrack = function () {
     var invalidHeader = false 
-          || (data.getUint8(offset++) !== 0x4d) 
-          || (data.getUint8(offset++) !== 0x54)
-          || (data.getUint8(offset++) !== 0x72) 
-          || (data.getUint8(offset++) !== 0x6b)
+          || (this.buffer.getUint8(this.pointer++) !== 0x4d) 
+          || (this.buffer.getUint8(this.pointer++) !== 0x54)
+          || (this.buffer.getUint8(this.pointer++) !== 0x72) 
+          || (this.buffer.getUint8(this.pointer++) !== 0x6b)
 
-      , byteLength = data.getUint32(offset)
-      , end = offset + byteLength + 4
+      , byteLength = this.buffer.getUint32(this.pointer)
+      , end = this.pointer + byteLength + 4
       , track = {
           byteLength: byteLength
         , events: []
       };
 
     if (invalidHeader) {
-      throw new Error("malformed track header");
+      throw new Error("Malformed track header.");
     }
 
-    offset += 4;
-    while (offset < end) {
-      offset = decodeTrackEvent(data, track, offset);
-      if (offset === -1) {
-        throw new Error("error decoding track event");
-      }
+    this.pointer += 4;
+    while (this.pointer < end) {
+      track.events.push(this.decodeTrackEvent());
     }
 
-    if (track.events.length > 0) {
-      tracks.push(track);
-    }
-    return offset;
+    this.data.tracks.push(track);
+
   };
 
   /**
-   * Helper method for decoding a specific event within a track
+   * Decode next track event.
    *
-   * @param {DataView} data : midi data
-   * @param {object} track
-   * @param {int} offset
+   * @api private
    */
 
-  var decodeTrackEvent = function (data, track, offset) {
-    var nEvents = track.events.length
-      , tmp = decodeVariableLengthValue(data, offset)
-      , type = data.getUint8(offset = tmp.offset)
-      , evt = {
-          deltaTime: tmp.value
-      };
+  Decoder.prototype.decodeTrackEvent = function () {
+    var deltaTime = this.decodeVarInt()
+      , type = this.buffer.getUint8(this.pointer)
+      , evt;
 
-    offset = (type === 0xff)
-      ? ignoreMetaEvent(data, offset, evt = null)
-      : (type === 0xf0 || type === 0xf7)
-        ? ignoreSysexEvent(data, offset, evt = null)
-        : (type & 0x80)
-          ? decodeMidiEvent(data, offset, evt)
-          : (nEvents > 0)
-            ? decodeRunningMidiEvent(data, offset, evt, track.events[nEvents - 1])
-            : -1;
-
-    if (offset === -1) {
-      throw new Error("running mode event with no previous event");
+    switch (type) {
+      case 0xff:
+        // Currently ignoring Meta events
+        this.pointer += 2;
+        this.decodeVarInt();
+        evt = {};
+        break;
+      case 0xf0:
+      case 0xf7:
+        // Currently ignoring Sysex events
+        do {} while (this.buffer.getUint8(this.pointer++) !== 0xf7);
+        evt = {};
+        break;
+      default:
+        if (type & 0x80) {
+          evt = this.decodeMidiEvent();
+        } else {
+          evt = this.decodeRunningMidiEvent();
+        }
+        break;
     }
 
-    if (evt !== null) {
-      track.events.push(evt);
-    }
-    return offset;
+    evt.deltaTime = deltaTime;
+    return evt;
+
   };
 
   /**
-   * Find the end of a variable length value, update the pointer
-   * and return the value.
+   * Decode a variable length integer from the file buffer.
    *
-   * @param {DataView} data
-   * @param {int} offset
+   * @api private
    */
 
-  var decodeVariableLengthValue = function (data, offset) {
+  Decoder.prototype.decodeVarInt = function () {
     var value = 0
       , nextByte;
 
     do {
-      nextByte = data.getUint8(offset++);
+      nextByte = this.buffer.getUint8(this.pointer++);
       value = value << 7;
       value += (nextByte & 0x7f);
     } while (nextByte > 0x80);
 
-    return {
-        offset: offset
-      , value: value
-    };
+    return value;
+
   };
 
   /**
-   * Update the pointer to account for a Meta event,
-   * but don't actually parse the event.
+   * Decode a MIDI channel event from the file buffer.
    *
-   * @param {DataView} data
-   * @param {int} offset
+   * @api private
    */
 
-  var ignoreMetaEvent = function (data, offset, evt) {
-    var tmp = decodeVariableLengthValue(data, offset + 2);
-    return tmp.offset + tmp.value;
-  };
-
-  /**
-   * Update the pointer to account for a Sysex event,
-   * but don't actually parse the event.
-   *
-   * @param {DataView} data
-   * @param {int} offset
-   */
-
-  var ignoreSysexEvent = function (data, offset, evt) {
-    do {} while (data.getUint8(offset++) !== 0xf7);
-    return offset;
-  };
-
-  /**
-   * Decode a MIDI Channel event
-   *
-   * @param {DataView} data
-   * @param {int} offset
-   * @param {object} evt : track event
-   */
-
-  var decodeMidiEvent = function (data, offset, evt) {
-    var tmp = data.getUint8(offset++)
+  Decoder.prototype.decodeMidiEvent = function () {
+    var tmp = this.buffer.getUint8(this.pointer++)
       , type = (tmp & 0xf0) >> 4
-      , channel = (tmp & 0x0f);
+      , channel = (tmp & 0x0f)
+      , evt = {
+            type: map[type].type
+          , channel: channel
+        };
 
-    evt.type = map[type].type;
-    evt.channel = channel;
     map[type].params.forEach(function (param) {
-      evt[param] = data.getUint8(offset++);
-    });
+      evt[param] = this.buffer.getUint8(this.pointer++);
+    }.bind(this));
 
-    return offset;
+    this.lastEvent = {
+        type: type
+      , channel: channel
+    };
+
+    return evt;
+
   };
 
   /**
-   * Decode a running mode MIDI Channel event
+   * Decode a running mode MIDI Channel event from the file buffer.
    *
-   * @param {DataView} data
-   * @param {int} offset
-   * @param {object} evt : track event
-   * @param {object} lastEvent : previous event in the sequence
+   * @api private
    */
 
-  var decodeRunningMidiEvent = function (data, offset, evt, lastEvent) {
-    evt.type = lastEvent.type;
-    evt.channel = lastEvent.channel;
+  Decoder.prototype.decodeRunningMidiEvent = function () {
+    var evt = {
+        type: this.lastEvent.type
+      , channel: this.lastEvent.channel
+    };
+
     map[evt.type].params.forEach(function (param) {
-      evt[param] = data.getUint8(offset++);
-    });
+      evt[param] = this.buffer.getUint8(this.pointer++);
+    }.bind(this));
 
-    return offset;
+    return evt;
+
   };
 
-  return {
-    decode: decode
+  // Public API
+  var pm = {
+
+    decode: function (buffer) {
+      return new Decoder().decode(buffer);
+    }
+
   };
 
-});
+  // Export the PrettyMIDI namespace, `pm`, both for Node.js and the browser
+  if (typeof exports !== "undefined") {
+    if (typeof module !== "undefined" && module.exports) {
+      exports = module.exports = pm;
+    }
+    exports.pm = pm;
+  } else {
+    this.pm = pm;
+  }
+
+})();
