@@ -1,11 +1,8 @@
 {
   "name": "prettymidi",
-  "version": "0.0.0",
-  "description": "A MIDI file decoding library for Node.js and browser audio applications.",
-  "main": "index.js",
-  "scripts": {
-    "test": "mocha --reporter spec"
-  },
+  "version": "0.0.1",
+  "description": "A MIDI utility library for Node.js and browser audio applications.",
+  "main": "./index.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/nick-thompson/prettymidi.git"
@@ -13,7 +10,6 @@
   "author": "Nick Thompson <ncthom91@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "uglify-js": "latest",
     "mocha": "latest",
     "chai": "latest"
   }
