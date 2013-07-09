@@ -62,6 +62,7 @@ module.exports.readDevices = function (access) {
     return output;
   });
 
+  return devices;
 };
 
 /**
