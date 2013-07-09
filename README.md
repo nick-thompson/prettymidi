@@ -1,46 +1,80 @@
 # PrettyMIDI
 
-PrettyMIDI is a small and simple library designed to easily facilitate
-working with MIDI in audio applications, in the most non-prescriptive way
-possible. Decoding and encoding MIDI files, and simplifying MIDI message event 
-handlers for the Web MIDI API are all on the drawing board as of now. Suggestions welcome :)
+PrettyMIDI is a simple MIDI utility library for audio applications.
 
-## Download
+## Installation
 
-### Browser
+```
+$ npm install prettymidi
+```
 
-**Development:** [prettymidi.js](https://raw.github.com/nick-thompson/prettymidi/master/prettymidi.js)
+Interested in browser development? Check out [Browserify](http://browserify.org/).
 
-**Production:** [prettymidi.min.js](https://raw.github.com/nick-thompson/prettymidi/master/prettymidi.min.js)
+## Example Usage
 
-## Getting Started
-
+### Decoding
 ```javascript
-var data  = pm.decode(myMidiFileBuffer)
-  , time  = context.currentTime
-  , bpm   = 140 // beats per minute
-  , tpb   = 8; // ticks per beat
+var fs = require('fs')
+  , pm = require('pm')
+  , Decoder = pm.Decoder;
 
-data.tracks[0].events.forEach(function (e) {
-  time += e.delta * bpm * tpb;
-  switch (e.type) {
-    case "noteOn":
-      mySynth.voiceOn(e.note, time);
-      break;
-    case "noteOff";
-      mySynth.voiceOff(e.note, time);
-      break;
-    default:
-      break;
-  }
+// Decode a MIDI file, returning a pretty and easily consumable JSON object.
+fs.readFile('/path/to/drums.mid', function (err, data) {
+  if (err) throw err;
+  var data  = new Decoder().decode(buffer);
+  data.tracks[0].events.forEach(function (e) {
+    console.log(e.delta); // Delta time since last MIDI event.
+    switch (e.type) {
+      case 'noteOn':
+        mySynth.voiceOn(e.note, e.velocity);
+        break;
+      case 'noteOff';
+        mySynth.voiceOff(e.note, e.velocity);
+        break;
+      default:
+        break;
+    }
+  });
+});
+```
+
+### Web MIDI
+```javascript
+var pm = require('prettymidi')
+  , Controller = pm.Controller;
+
+navigator.requestMIDIAccess().then(function (access) {
+  console.log(pm.readDevices(access));
+  var padKontrol = new Controller(access, 1);
+  padKontrol.on('message', function (msg) {
+    switch (msg.type) {
+      // Message type is decoded for you
+      case 'noteOn':
+        console.log(msg.note);
+        console.log(msg.velocity);
+        break;
+      ...
+      case 'pitchBend':
+        // Parameter names decoded depending on message type.
+        console.log(msg.lowValue);
+        console.log(msg.highValue);
+        break;
+      default:
+        break;
+    }
+  });
+}, function (message) {
+  console.log('Error: ' + message);
 });
 ```
 
 ## Attribution
 
-A lot of the insight and motivation came through seeing Chris Wilson's
-[Standard-MIDI-File-Reader](https://github.com/cwilso/Standard-MIDI-File-reader)
-project. Further inspiration came from Michael Deal's awesome [MIDI.js](https://github.com/mudcube/MIDI.js).
+The following projects were hugely helpful and inspirational in building
+PrettyMIDI:
+
+* [Standard-MIDI-File-Reader](https://github.com/cwilso/Standard-MIDI-File-reader)
+* [MIDI.js](https://github.com/mudcube/MIDI.js).
 
 ## License
 Copyright (c) 2012 Nick Thompson

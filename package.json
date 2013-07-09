@@ -1,7 +1,7 @@
 {
   "name": "prettymidi",
   "version": "0.0.1",
-  "description": "A MIDI utility library for Node.js and browser audio applications.",
+  "description": "A simple MIDI utility library for audio applications.",
   "main": "./index.js",
   "repository": {
     "type": "git",
